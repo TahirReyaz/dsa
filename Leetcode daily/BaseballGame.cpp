@@ -27,21 +27,21 @@ public:
     int calPoints(vector<string>& ops) {
         vector<int> score;
         for(int i = 0; i < ops.size(); i++) {
-		int n = score.size();
-		switch (ops[i][0]) {
-			case 'C':
-				score.pop_back();
-				break;
-			case 'D':
-				score.push_back(score[n-1] * 2);
-				break;
-			case '+':
-				score.push_back(score[n - 1] + score[n - 2]);
-				break;
-			default:
-				score.push_back(stoi(ops[i]));
-		}
-	}
+				int n = score.size();
+				switch (ops[i][0]) {
+					case 'C':
+						score.pop_back();
+						break;
+					case 'D':
+						score.push_back(score[n-1] * 2);
+						break;
+					case '+':
+						score.push_back(score[n - 1] + score[n - 2]);
+						break;
+					default:
+						score.push_back(stoi(ops[i]));
+				}
+			}
         int sum = 0;
         for(int i = 0; i < score.size(); i++) {
             sum+=score[i];
