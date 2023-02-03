@@ -40,11 +40,42 @@ Node * buildTreeLevelOrder() {
 	cin>>d;
 
 	queue<Node *> q;
+	Node * root = new Node(d);
+	
+	q.push(root);
+	q.push(NULL);
 
-	while()
-	Node * n = new Node(d);
-	q.push(n);
-
+	while(!q.empty()) {
+		Node * temp = q.front();
+		q.pop();
+		if(temp != NULL) {
+			// Input left
+			cin>>d;
+			if(d == -1) {
+				temp->left = NULL;
+			} else {
+				Node * temp2 = new Node(d);
+				temp->left = temp2;
+				q.push(temp2);
+			}			
+			
+			// Input right
+			cin>>d;
+			if(d == -1) {
+				temp->right = NULL;
+			} else {
+				Node * temp2 = new Node(d);
+				temp->right = temp2;
+				q.push(temp2);
+			}
+		} else {
+			if(!q.empty()) {
+				q.push(NULL);
+			}
+		}
+	}
+	
+	return root;
 }
 
 void printPreorder (Node * root) {
