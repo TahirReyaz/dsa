@@ -132,10 +132,126 @@ void printLevelOrder(Node * root) {
 	
 }
 
-int main() {
-	// Node * root = buildTree();
-	Node * root = buildTreeLevelOrder();
 
+vector<int> printKthLevel(Node* root, int k){
+   // your code goes here
+   vector<int> ans;
+   queue<Node *> q;
+   q.push(root);
+   q.push(NULL);
+   
+   while(!q.empty()) {
+       Node * temp = q.front();
+       if(k==1) {
+           while(q.front() != NULL){
+			   ans.push_back(q.front()->data);
+               q.pop();
+           }
+		   return ans;
+       }
+       q.pop();
+       if(temp == NULL) {
+			k--;
+           if(!q.empty()) {
+               q.push(NULL);
+           }
+       } else {
+           if(temp->left) {
+               q.push(temp->left);
+           }
+           if(temp->right) {
+               q.push(temp->right);
+           }
+       }
+   }
+   return ans;  
+}
+
+int heightOfTree(Node * root) {
+	if(root == NULL) {
+		return 0;
+	}
+	
+	int h1 = heightOfTree(root->left);
+	int h2 = heightOfTree(root->right);
+	
+	return 1 + max(h1, h2);
+}
+
+int sumOfTree(Node* root) {
+    if(root == NULL) {
+        return 0;
+    }
+	int sum = 0;    
+    if(root->left) {
+        sum+= sumOfTree(root->left);
+    }
+    if(root->right) {
+        sum+= sumOfTree(root->right);
+    }
+    return sum + root->data;
+}
+
+void printVector(vector<int> v) {
+	cout<<"[";
+	for(auto x: v) {
+		cout<<x<<", ";
+	}
+	cout<<"]"<<endl;
+}
+
+int diameter(Node * root) {
+	if(root == NULL) {
+		return 0;
+	}
+	int lh=0, rh=0, ld=0, rd=0;
+	if(root->left) {
+		lh = heightOfTree(root->left);
+		ld = diameter(root->left);
+	}
+	if(root->right) {
+		rh = heightOfTree(root->right);
+		rd = diameter(root->right);
+	}
+		
+	return max(max(ld, rd), lh+rh);
+}
+
+pair<int, int> diameterOptimised(Node * root) {
+	pair<int, int> dim;
+	if(root == NULL) {
+		dim.first = dim.second = 0;
+		return dim;
+	}
+	pair<int, int> left = {0, 0}, right = {0, 0};
+	if(root->left) {
+		left = diameterOptimised(root->left);
+	}
+	if(root->right) {
+		right = diameterOptimised(root->right);
+	}
+	
+	dim.second = max(left.second, right.second) + 1;	
+	dim.first = max(left.second + right.second, max(left.first, right.first));
+	
+	return dim;
+}
+
+int main() {
+	Node * root = buildTree();
+	// Node * root = buildTreeLevelOrder();
+	int k=2;
+
+	cout<<k<<"th level: ";
+	vector<int> kthLevel = printKthLevel(root, k);
+	printVector(kthLevel);
+	
+	cout<<"Sum of tree: "<<sumOfTree(root)<<endl;
+	
+	cout<<"Diameter: "<<diameter(root)<<endl;
+	pair<int, int> diameterNHeight = diameterOptimised(root);
+	cout<<"Diameter optimised: "<<diameterNHeight.first<<endl;
+	
 	cout<<"Pre: ";
 	printPreorder(root);
 	cout<<endl;
@@ -151,6 +267,8 @@ int main() {
 	cout<<"Level order:\n";
 	printLevelOrder(root);
 	cout<<endl;
+	
+	cout<<"Height of Tree: "<<heightOfTree(root);
 
 	return 0;
 }
